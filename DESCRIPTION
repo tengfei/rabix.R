@@ -1,0 +1,22 @@
+Package: rabix
+Type: Package
+Title: R utilities for rabix.
+Version: 0.0.7
+Date: 2015-06-01
+Author: Tengfei Yin <tengfei.yin@sbgenomics.com>, Nan Xiao <nan.xiao@sbgenomics.com>
+Maintainer: Tengfei Yin <tengfei.yin@sbgenomics.com>
+biocViews: Infrastructure, DataRepresentation, WorkflowStep
+Description: R utitlies for rabix, creating rabix schema, and dump to JSON/YAML.
+License: Artistic-2.0
+VignetteBuilder: knitr
+URL: https://www.rabix.org/
+BugReports: https://github.com/tengfei/rabix.R/issues
+Depends:
+    cwl (>= 0.99.0)
+Imports:
+    methods,
+    docopt
+Suggests:
+    BiocStyle,
+    knitr,
+    rmarkdown

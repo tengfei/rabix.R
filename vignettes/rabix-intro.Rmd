@@ -1,0 +1,302 @@
+---
+title: "Introduction: rabix with R"
+output:
+  BiocStyle::html_document:
+    toc: true
+    number_sections: true
+    highlight: haddock
+    css: style.css
+    includes:
+      in_header: logo.md
+---
+
+
+<!--
+%\VignetteIndexEntry{Introduction: rabix with R}
+%\VignettePackage{cwl}
+%\VignetteEngine{knitr::rmarkdown}
+-->
+
+```{r style, echo = FALSE, results = 'asis'}
+BiocStyle::markdown(css.files = "custom.css")
+```
+
+<!-- override white background for classless code chunks -->
+<style type="text/css" scoped>
+  pre:not([class]) { background-color: #F8F8F8; }
+  pre code { background-color: transparent; }
+</style>
+
+```{r code, echo = FALSE}
+code <- function(...) {
+    cat(paste(..., sep = "\n"))
+}
+
+code2 <- function(...) {
+    cat(paste("```markdown", ..., "\n", "```", sep = "\n"))
+}
+```
+
+# Introduction
+[rabix](https://www.rabix.org/) is an open-source toolkit for developing and running portable workflows based on the Common Workflow Language specification and Docker, rabix is developed and maintained by [Seven Bridges Genomics](https://www.sbgenomics.com/) engineers. 
+
+[Common workflow languange](https://github.com/common-workflow-language/common-workflow-language) is a community wise effor to create specifications that enable reproducible, portable data analysis flow. There is an Bioconductor package called `cwl` developed to provide implementation of objects and it is based on [draf2](http://common-workflow-language.github.io/draft-2/), full details are described in the website. 
+
+`rabix` Bioconductor package is built based on package `cwl`, with its own adaptor used for rabix interface. With `rabix` package, you can 
+
+* Using R interface to create Tool object 
+* Using R interface to create Workflow object [TODO] 
+* Export them into JSON and directly imported into rabix or SBG platform interface to create your own tool and workflow
+* Parse roxygen style into a command line [TODO] 
+* Parse docopt into a JSON file
+
+In this tutorial, we will learn about command line tool, R command line tool via docopt standard, creating your own command line tool and use it on rabix or SBG platform. 
+
+# Understand Docker
+
+To save the thousands word here about 
+* how to create docker image/container
+* how to pull your tools in the docker container
+
+This tutorial assuems that you are familiar with the docker or at least knows which docker container has the tools you want to wrap. 
+
+Materials you should read about 
+* [Docker tutorials](https://docs.docker.com/userguide/dockerimages/)
+* [Rocker project](https://github.com/rocker-org/rocker)
+* [Bioconductor docker images](http://www.bioconductor.org/help/docker/)
+
+__Rule of Thumb__: search existing tools before you create your own, use official images as much as possible. For example, you can search "samtools" on [dockerhub](https://dockerhub.com), there will be a list of containers. 
+
+# Understand Command Line Tools
+
+## What is Command Line Tool
+
+## rabix: Portable Bioinformatics Pipelines
+
+### Introduction
+Let's quote the features quickly from the website, I think it is summarised very well. 
+
+* __Wrap__: Rabix lets you wrap your data analysis tools so that they can be run on any infrastructure, across diverse environments. Tools are installed inside Docker containers, and their behavior is precisely specified using our graphical editor or, if you prefer, via a JSON document that you can import. Tools wrapped in this way can be directly deployed on any platform: on your laptop, for low data volumes or during testing, with seamless integration to the cloud when demand for computational resources spikes.
+* __Wire up__: Once you’ve wrapped your tools, wire them together into a data analysis workflow with our simple pipeline editor. The workflow can be fully specified---right down to each tool’s parameter settings---in a single JSON document in accordance with the Common Workflow Language.
+* __Share__: Workflows described using the Common Workflow Language are portable. This allows you to distribute workflows to colleagues without any reconfiguration, and submit your workflows to journals and conferences with the guarantee that your results are perfectly reproducible. Even if you don’t have plans to share your tools, Rabix’s precise specification can help you keep track of which inputs, parameter settings, and tool versions were used in every workflow you execute, making it easy to reproduce analyses any given results.
+* __Run__: Anybody who has the CWL-description of your workflow can execute it, with your precise configurations. Simply pass the JSON document describing your tool to Rabix, along with the data to be analyzed and hit run.
+
+Please login with your github account, then it's ready to start describing tools and pipelines.
+
+### Interface
+You don't need to know about JSON, YAML or any languange, you can simply start describing your tools and create workflows with the graphical user interface. 
+
+Please follow the SBG tutorials for rabix on the platform, the interface will be the same. 
+
+### Example
+
+Let's just specify the r-base image 
+
+
+## docopt: Command-line Interface Description Language
+Withd docopt, you can define the interface for you command line applications and different implementation will provide parser for it. Please visit [docopt](http://docopt.org/) website to read through the requirements before you started writing your own docopt 
+
+Actually the style will look very familar to those who has been working with commad line tools a lot in linux. Here is an example from its website
+
+```
+Usage:
+  naval_fate ship new <name>...
+  naval_fate ship <name> move <x> <y> [--speed=<kn>]
+  naval_fate ship shoot <x> <y>
+  naval_fate mine (set|remove) <x> <y> [--moored|--drifting]
+  naval_fate -h | --help
+  naval_fate --version
+
+Options:
+  -h --help     Show this screen.
+  --version     Show version.
+  --speed=<kn>  Speed in knots [default: 10].
+  --moored      Moored (anchored) mine.
+  --drifting    Drifting mine.
+```
+
+Please do read the website for details, but in short, let's summarise here, you have
+
+* Options (-h, --help, --speed=<kn>, etc.)
+* Positional arguments (<name>, <x>, <y>).
+* "[ ]", parens "( )", pipes "|" and ellipsis "..." to describe optional, required, mutually exclusive, and repeating elements.
+* Option with an argument (--speed=<kn>)
+* Arguments with a default value ([default: 10]).
+
+### Writing R command line tools
+In R, we also have a nice implementation in a package called `docopt`, developed by *Edwin de Jonge*. Check out its [tutorial](https://github.com/docopt/docopt.R) on github.
+
+So let's quickly create a command line interface for our R scripts with a dummy example. Let's turn the uniform distribution function `runif` into a command line tool.
+
+when you check out the help page for `runif`, here is the key information you want to mark down. 
+```
+Usage
+
+runif(n, min = 0, max = 1)
+
+Arguments
+
+n	
+number of observations. If length(n) > 1, the length is taken to be the number required.
+
+min, max	
+lower and upper limits of the distribution. Must be finite.
+```
+
+I will add one more parameter to set seed, here is the R script file called `runif.R`. 
+
+At the beginning, I use docopt starndard to write my tool help. 
+```{r}
+'usage: runif.R [--n=<int> --min=<float> --max=<float> --seed=<float>]
+
+options:
+ --n=<int>        number of observations. If length(n) > 1, the length is taken to be the number required [default: 1].
+ --min=<float>   lower limits of the distribution. Must be finite [default: 0].
+ --max=<float>   upper limits of the distribution. Must be finite [default: 1].
+ --seed=<float>  seed for set.seed() function [default: 1]' -> doc
+
+library(docopt)
+
+```
+Let's first do some testing in R session before you make it a full functional command line tool.
+
+```{r}
+docopt(doc) #with no argumetns provided
+docopt(doc, "--n 10 --min=3 --max=5")
+```
+
+Add my command line function
+
+```{r}
+opts <- docopt(doc)
+set.seed(opts$seed)
+runif(n = as.integer(opts$n), 
+      min = as.numeric(opts$min), 
+      max = as.numeric(opts$max))
+```
+
+Add Shebang at the top of the file, and a complete example for `runif.R` command line will be like this
+
+```{r, eval=FALSE}
+#!/usr/bin/Rscript
+'usage: runif.R [--n=<int> --min=<float> --max=<float> --seed=<float>]
+
+options:
+ --n=<int>        number of observations. If length(n) > 1, the length is taken to be the number required [default: 1].
+ --min=<float>   lower limits of the distribution. Must be finite [default: 0].
+ --max=<float>   upper limits of the distribution. Must be finite [default: 1].
+ --seed=<float>  seed for set.seed() function [default: 1]' -> doc
+
+library(docopt)
+opts <- docopt(doc)
+set.seed(opts$seed)
+runif(n = as.integer(opts$n), 
+      min = as.numeric(opts$min), 
+      max = as.numeric(opts$max))
+```
+
+Ok seems good, now let's test it in our terminal, don't forget to make it executable by doing something like `chmod 755 runif.R`
+
+```
+$ ./runif.R
+Loading required package: methods
+[1] 0.2655087
+$ ./runif.R
+Loading required package: methods
+[1] 0.2655087
+$ ./runif.R --seed=123 --n 10 --min=1 --max=100
+Loading required package: methods
+ [1] 29.470174 79.042208 41.488715 88.418723 94.106261  5.510093 53.282443
+ [8] 89.349485 55.592066 46.204859
+```
+
+### Python Parser for docopt
+
+### R Parser for docopt
+
+### Practise
+
+## Create Tools in R with rabix
+
+You can use R interface to create objects in R and easily convert it into JSON/YAML for rabix interface or other implemenation. Most importantly, it's possible for creating other applications around those objects in R. 
+
+### RabixTool Object
+This object extends the `CommandLineTool` object, with its own adaptors, for example, with additional information like owner, contributor or requirements for cpu and memory. This object describes a command line tool with input, output, arguments and other information for an executor to understand and execute. `rabix` packages also provides validation,  a set of short function constructor names for easy construction of the object. 
+
+Let's use the same example above for creating a command line tool for `samtools sort`
+
+Load the pacakge first
+```{r}
+library(rabix)
+```
+
+Define input parameters
+* `IPList` is short for `InputParameterList` from `cwl` package
+* `InPar` is short for `InputParameter` from `cwl` package
+* `OutPar` is short for `OutputParameter` from `cwl` package
+
+
+
+
+```{r}
+ipl <- IPList(
+    InPar(id = "bam",
+          type = "File",
+          label = "Bam file",
+          description = "Input bam file",
+          position = 1L,
+          separate = TRUE),
+    InPar(id = "level",
+          type = "Integer",
+          label = "Compression Level",
+          description = "Set compression level, from 0 (uncompressed) to 9 (best)",
+          position = 2L),
+    InPar(id = "prefix",
+          type = "String",
+          label = "Prefix",
+          description = "Write temporary files to PREFIX.nnnn.bam",
+          position = 3L)
+)
+
+```
+Create output parameter
+
+```{r}
+opl <- OPList(OutPar(
+        id = "sorted",
+        type = "File",
+        glob = "*.bam"    
+))
+```
+
+Now create the tool for `samtools sort`
+
+```{r}
+rbx <- RabixTool(id = "samtools-sort",
+                label = "Samtools sort subcommand",
+                description = "Samtools sort: sort bam into sorted bam : )",
+                cpu = 2, mem = 202,
+                baseCommand = "samtools sort",
+                arguments = "out.bam",
+                inputs = ipl,
+                outputs = opl)
+```
+
+You can then dump it into JSON and paste it into JSON interface
+```{r}
+rbx$toJSON()
+```
+
+Or print it nicely to check it
+```{r}
+rbx$toJSON(pretty = TRUE)
+```
+### Practise 
+
+# Session Inforamtion
+```{r}
+sessionInfo()
+```
+
+
+
