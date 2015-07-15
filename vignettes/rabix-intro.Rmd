@@ -198,6 +198,15 @@ runif(n = as.integer(opts$n),
 Ok seems good, now let's test it in our terminal, don't forget to make it executable by doing something like `chmod 755 runif.R`
 
 ```
+$ ./runif.R --help
+Loading required package: methods
+usage: runif.R [--n=<int> --min=<float> --max=<float> --seed=<float>]
+
+options:
+ --n=<int>        number of observations. If length(n) > 1, the length is taken to be the number required [default: 1].
+ --min=<float>   lower limits of the distribution. Must be finite [default: 0].
+ --max=<float>   upper limits of the distribution. Must be finite [default: 1].
+ --seed=<float>  seed for set.seed() function [default: 1]
 $ ./runif.R
 Loading required package: methods
 [1] 0.2655087
@@ -211,8 +220,20 @@ Loading required package: methods
 ```
 
 ### Python Parser for docopt
+SBG engineer team provide a python parser for docopt, it can parse a command line tool from its help manual if it conforms to docopt standard. It will become part of the rabix tool, but before that, I also include the python parser in this R package. 
+
+Let's use above example, the script is in the package folder.
+```{r}
+runif.file <- system.file("cwl", "runif.R", package = "rabix")
+system(runif.file)
+```
+
+[TODO]
 
 ### R Parser for docopt
+```{r}
+
+```
 
 ### Practise
 

@@ -24,7 +24,7 @@ CpuRequirement <-
                         class <<- class
                         stopifnot(is.numeric(value))
                         .v <- as.integer(value)
-                        if(.v %in% c(1L, 0L)){
+                        if(!.v %in% c(1L, 0L)){
                             warning("For now, CPU value must be 0L (multi-treads) or 1L (single-thread)")
                             if(.v > 0){
                                 message("Convert CPU value ", .v, " to", 1L)
@@ -90,6 +90,17 @@ RabixTool <-
                         owner = list(),
                         contributor = list()){
 
+                        stopifnot(is.numeric(cpu))
+                        .v <- as.integer(cpu)
+                        if(!.v %in% c(1L, 0L)){
+                            warning("For now, CPU value must be 0L (multi-treads) or 1L (single-thread)")
+                            if(.v > 0){
+                                message("Convert CPU value ", .v, " to", 1L)
+                                .v <- 1L
+                            }
+                        }
+                        
+
                         if(is.null(requirements)){
                             requirements <<-
                                 ProcessRequirementList(
@@ -99,7 +110,7 @@ RabixTool <-
                                         dockerLoad = dockerLoad,
                                         dockerFile = dockerFile,
                                         dockerOutputDirectory = dockerOut),
-                                         CpuRequirement(value = as.integer(cpu)),
+                                         CpuRequirement(value = .v),
                                          MemRequirement(value = as.integer(mem))))
                         }
                         context <<- context
