@@ -13,6 +13,8 @@
 #' @export CpuRequirement
 #' @exportClass CpuRequirement
 #' @aliases CpuRequirement CpuRequirement-class
+#' @examples
+#' CpuRequirement(value = 1L)
 CpuRequirement <-
     setRefClass("CpuRequirement", contains = "ProcessRequirement",
                 fields = list(
@@ -41,7 +43,9 @@ CpuRequirement <-
 #' @rdname requirements
 #' @aliases MemRequirement MemRequirement-class
 #' @export MemRequirement
-#' @exportClass MemRequirement 
+#' @exportClass MemRequirement
+#' @examples
+#' MemRequirement(value = 2000L)
 MemRequirement <-
     setRefClass("MemRequirement", contains = "ProcessRequirement",
                 fields = list(
@@ -64,13 +68,74 @@ MemRequirement <-
 #' platform. \code{RabixTool} class extends \code{CommandLineTool}
 #' with more fields.
 #'
+#' 
 #' @field context [character] by default:
 #' "https://github.com/common-workflow-language/common-workflow-language/blob/draft-1/specification/tool-description.md"
 #' @field owner [list] a list of owner names. 
 #' @field contributor [list] a list of contributor names.
+#'
+#' @section other fields:
+#' \describe{
+#' \item{\code{cpu}}{cpu 0 or 1, for any value >1 will be converted to 1L, passed to CpuRequirement}
+#' \item{\code{mem}}{Positive integer. Passed to MemRequirement.}
+#' \item{\code{dockerPull}}{[character] Get a Docker image using
+#' docker pull}
 #' 
+#' \item{\code{dockerLoad}}{[character] Specify a HTTP URL from which
+#' to download a Docker image using docker load.}
+#' 
+#' \item{\code{dockerFile}}{[character] Supply the contents of a
+#' Dockerfile which will be build using docker build.}
+#' 
+#' \item{\code{dockerImageId}}{[character] The image id that will be
+#' used for docker run. May be a human-readable image name or the
+#' image identifier hash. May be skipped if dockerPull is specified,
+#' in which case the dockerPull image id will be used.}
+#' 
+#' \item{\code{dockerOutputDirectory}}{ [character] Set the designated
+#' output directory to a specific location inside the Docker
+#' container.}}
+#' 
+#' @import methods
+#' @import cwl
+#' @importFrom docopt docopt
 #' @export RabixTool
 #' @exportClass RabixTool
+#' @examples
+#' ipl <- IPList(
+#'     InPar(id = "bam",
+#'           type = "File",
+#'           label = "Bam file",
+#'           description = "Input bam file",
+#'           position = 1L,
+#'           separate = TRUE),
+#'     InPar(id = "level",
+#'           type = "Integer",
+#'           label = "Compression Level",
+#'           description = "Set compression level, from 0 (uncompressed) to 9 (best)",
+#'           position = 2L),
+#'     InPar(id = "prefix",
+#'           type = "String",
+#'           label = "Prefix",
+#'           description = "Write temporary files to PREFIX.nnnn.bam",
+#'           position = 3L)
+#' )
+#' opl <- OPList(OutPar(
+#'         id = "sorted",
+#'         type = "File",
+#'         glob = "*.bam"    
+#' ))
+#' rbx <- RabixTool(id = "samtools-sort",
+#'                 label = "Samtools sort subcommand",
+#'                 description = "Samtools sort: sort bam into sorted bam : )",
+#'                 dockerPull = "tengfei/samtools:v1.2",
+#'                 cpu = 2, mem = 202,
+#'                 baseCommand = "samtools sort",
+#'                 arguments = "out.bam",
+#'                 inputs = ipl,
+#'                  outputs = opl)
+#' rbx$toJSON()
+#' rbx$toJSON(pretty = TRUE)
 RabixTool <-
     setRefClass("RabixTool",
                 contains = "CommandLineTool",

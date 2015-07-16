@@ -1,4 +1,4 @@
-#' @rdname shorthand-cwl
+#' Shorthand functions for cwl packages constructors
 #'
 #' Shorthand functions for cwl packages constructors
 #'
@@ -99,7 +99,30 @@
 #' 
 #' }
 #'
+#' @rdname shorthand-cwl
+#' @aliases CLB argslist COB IPList OPList InPar OutPar
+#'
+#'
 #' @export CLB argslist COB IPList OPList InPar OutPar
+#' @examples
+#' ipl <- IPList(
+#'     InPar(id = "bam",
+#'           type = "File",
+#'           label = "Bam file",
+#'           description = "Input bam file",
+#'           position = 1L,
+#'           separate = TRUE),
+#'     InPar(id = "level",
+#'           type = "Integer",
+#'           label = "Compression Level",
+#'           description = "Set compression level, from 0 (uncompressed) to 9 (best)",
+#'           position = 2L),
+#'     InPar(id = "prefix",
+#'           type = "String",
+#'           label = "Prefix",
+#'           description = "Write temporary files to PREFIX.nnnn.bam",
+#'           position = 3L)
+#' )
 CLB <- CommandLineBinding
 argslist <- CCBList
 COB <- CommandOutputBinding

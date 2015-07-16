@@ -143,7 +143,7 @@ so `sort` or `view` are sub commands, to conform to rabix standard, let me quote
 
 * Note that if your tool has multiple sub-commands, you will need to create a description in the graphical editor for each sub-command, saving each one as a new 'tool'. Each sub-command description should reference __the same Docker image__, which contains the tool. So your `view` or `sort` tool should reference the same `samtools` docker image. 
 * All input files and parameter settings are treated as inputs.
-* _Arguments_ that are not related to any specific input—such as those based on resources allocated to the job—can be entered in the _Arguments_ field.
+* _Arguments_ that are not related to any specific input such as those based on resources allocated to the job can be entered in the _Arguments_ field.
 * The executable name of the sub-command, and any other part of the command that is preset for every execution of the tool as you describe it, is entered in the field _Base Command_. So `samtools sort` will be your base command. 
 
 Each command comes with its own parameters, for example, let's take a look for `samtools sort`
@@ -176,8 +176,8 @@ Please visit the website [https://www.rabix.org](https://www.rabix.org) for deta
 Let's quote the features quickly from the website, I think it is summarized very well. 
 
 * __Wrap__: Rabix lets you wrap your data analysis tools so that they can be run on any infrastructure, across diverse environments. Tools are installed inside Docker containers, and their behavior is precisely specified using our graphical editor or, if you prefer, via a JSON document that you can import. Tools wrapped in this way can be directly deployed on any platform: on your laptop, for low data volumes or during testing, with seamless integration to the cloud when demand for computational resources spikes.
-* __Wire up__: Once you’ve wrapped your tools, wire them together into a data analysis workflow with our simple pipeline editor. The workflow can be fully specified---right down to each tool’s parameter settings---in a single JSON document in accordance with the Common Workflow Language.
-* __Share__: Workflows described using the Common Workflow Language are portable. This allows you to distribute workflows to colleagues without any reconfiguration, and submit your workflows to journals and conferences with the guarantee that your results are perfectly reproducible. Even if you don’t have plans to share your tools, Rabix’s precise specification can help you keep track of which inputs, parameter settings, and tool versions were used in every workflow you execute, making it easy to reproduce analyses any given results.
+* __Wire up__: Once you've wrapped your tools, wire them together into a data analysis workflow with our simple pipeline editor. The workflow can be fully specified, right down to each tool's parameter settings in a single JSON document in accordance with the Common Workflow Language.
+* __Share__: Workflows described using the Common Workflow Language are portable. This allows you to distribute workflows to colleagues without any reconfiguration, and submit your workflows to journals and conferences with the guarantee that your results are perfectly reproducible. Even if you don't have plans to share your tools, Rabix's precise specification can help you keep track of which inputs, parameter settings, and tool versions were used in every workflow you execute, making it easy to reproduce analyses any given results.
 * __Run__: Anybody who has the CWL-description of your workflow can execute it, with your precise configurations. Simply pass the JSON document describing your tool to Rabix, along with the data to be analyzed and hit run.
 
 Please login with your github account, then it's ready to start describing tools and pipelines. For more detailed tutorial, a good read will be on SBG developer hub. [TODO]

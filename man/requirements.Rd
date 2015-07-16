@@ -19,4 +19,8 @@ CPU. For mem, default is 1000L. Note: for CPU, 0L means
 multi-tread, and non-zero value will be converted to 1L, which
 means single thread.}
 }}
+\examples{
+CpuRequirement(value = 1L)
+MemRequirement(value = 2000L)
+}
 
