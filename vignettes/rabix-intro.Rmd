@@ -38,7 +38,7 @@ code2 <- function(...) {
 ```
 
 # Introduction
-How hard it is to create a data analysis workflow, deploy it and distribute it? sometimes it's quite hard. For example, here is standford huge seq pipeline. Each node represents a tool with it's own dependencies, written in different languanges. And a working analysis flow could as comlicated as shown. 
+How hard it is to create a data analysis workflow, deploy it and distribute it? sometimes it's quite hard. For example, here is Stanford huge seq pipeline. Each node represents a tool with it's own dependencies, written in different languages. And a working analysis flow could as complicated as shown. 
 
 ![huge-seq][huge-seq]
 
@@ -46,16 +46,16 @@ We are facing problems
 
 * Dependency hell
 * Workflow standard unbuilt
-* Imporssible to reproduce a flow
+* Impossible to reproduce a flow
 * Hard to develop, deploy and share
 * Hard to benchmark and re-build 
 * Hard to maintain
 
 [rabix](https://www.rabix.org/) is an open-source toolkit for developing and running portable workflows based on the Common Workflow Language specification and Docker, rabix is developed and maintained by [Seven Bridges Genomics](https://www.sbgenomics.com/) engineers. 
 
-[Common workflow languange](https://github.com/common-workflow-language/common-workflow-language) is a community wise effor to create specifications that enable reproducible, portable data analysis flow. There is an Bioconductor package called `cwl` developed to provide implementation of objects and it is based on [draf2](http://common-workflow-language.github.io/draft-2/), full details are described in the website. 
+[Common workflow languange](https://github.com/common-workflow-language/common-workflow-language) is a community wise effort to create specifications that enable reproducible, portable data analysis flow. There is an Bioconductor package called `cwl` developed to provide implementation of objects and it is based on [draf2](http://common-workflow-language.github.io/draft-2/), full details are described in the website. 
 
-`rabix` Bioconductor package is built based on package `cwl`, with its own adaptor used for rabix interface. With `rabix` package, you can 
+`rabix` Bioconductor package is built based on package `cwl`, with its own adapter used for rabix interface. With `rabix` package, you can 
 
 * Using R interface to create Tool object 
 * Using R interface to create Workflow object [TODO] 
@@ -78,7 +78,7 @@ To save thousands word here about
 * how to create docker image/container
 * how to pull your tools in the docker container
 
-This tutorial assuems that you are familiar with the docker or at least knows which docker container has the tools you want to wrap. 
+This tutorial assumes that you are familiar with the docker or at least knows which docker container has the tools you want to wrap. 
 
 Materials you should read about 
 
@@ -90,15 +90,15 @@ __Rule of Thumb__: search existing tools before you create your own, use officia
 
 # Understand Command Line Tools
 
-In this chapter we will work through some real examples to write R command line tools, learn to use docopt starndard, describe your tools with rabix and creating tools with R interface etc. 
+In this chapter we will work through some real examples to write R command line tools, learn to use docopt standard, describe your tools with rabix and creating tools with R interface etc. 
 
 
 
 ## What is Command Line Tool
 
-Most of us are already familiar with command line tools, tons of unix tools and bioinformaits tools have command line interface, we give the command line tool parameters to launch the appplication and do some work for us. 
+Most of us are already familiar with command line tools, tons of unix tools and bioinformatics tools have command line interface, we give the command line tool parameters to launch the application and do some work for us. 
 
-You tools may also have multiple subcommands, for examples, `samtools` 
+You tools may also have multiple sub-commands, for examples, `samtools` 
 
 ```
 $ samtools
@@ -141,12 +141,12 @@ Commands:
 
 so `sort` or `view` are sub commands, to conform to rabix standard, let me quote some key here
 
-* Note that if your tool has multiple subcommands, you will need to create a description in the graphical editor for each subcommand, saving each one as a new 'tool'. Each subcommand description should reference __the same Docker image__, which contains the tool. So your `view` or `sort` tool should reference the same `samtools` docker image. 
+* Note that if your tool has multiple sub-commands, you will need to create a description in the graphical editor for each sub-command, saving each one as a new 'tool'. Each sub-command description should reference __the same Docker image__, which contains the tool. So your `view` or `sort` tool should reference the same `samtools` docker image. 
 * All input files and parameter settings are treated as inputs.
 * _Arguments_ that are not related to any specific input—such as those based on resources allocated to the job—can be entered in the _Arguments_ field.
-* The executable name of the subcommand, and any other part of the command that is preset for every execution of the tool as you describe it, is entered in the field _Base Command_. So `samtools sort` will be your base command. 
+* The executable name of the sub-command, and any other part of the command that is preset for every execution of the tool as you describe it, is entered in the field _Base Command_. So `samtools sort` will be your base command. 
 
-Each command comes with its own parameteres, for example, let's take a look for `samtools sort`
+Each command comes with its own parameters, for example, let's take a look for `samtools sort`
 
 ```
 Usage: samtools sort [options...] [in.bam]
@@ -173,7 +173,7 @@ We see the options, those are the __inputs__ (some or all of them) we want to de
 ![rabix_homepage][rabix_homepage]
 Please visit the website [https://www.rabix.org](https://www.rabix.org) for detailed information. This is a very nice implementation of Command Workflow Language, and has so far the best user experience for building your tools and flows. SBG platform also use the same interface. 
 
-Let's quote the features quickly from the website, I think it is summarised very well. 
+Let's quote the features quickly from the website, I think it is summarized very well. 
 
 * __Wrap__: Rabix lets you wrap your data analysis tools so that they can be run on any infrastructure, across diverse environments. Tools are installed inside Docker containers, and their behavior is precisely specified using our graphical editor or, if you prefer, via a JSON document that you can import. Tools wrapped in this way can be directly deployed on any platform: on your laptop, for low data volumes or during testing, with seamless integration to the cloud when demand for computational resources spikes.
 * __Wire up__: Once you’ve wrapped your tools, wire them together into a data analysis workflow with our simple pipeline editor. The workflow can be fully specified---right down to each tool’s parameter settings---in a single JSON document in accordance with the Common Workflow Language.
@@ -183,7 +183,7 @@ Let's quote the features quickly from the website, I think it is summarised very
 Please login with your github account, then it's ready to start describing tools and pipelines. For more detailed tutorial, a good read will be on SBG developer hub. [TODO]
 
 ### Interface
-You don't need to know about JSON, YAML or any languange, the most easy way is that you can simply start describing your tools and create workflows with the graphical user interface. 
+You don't need to know about JSON, YAML or any language, the most easy way is that you can simply start describing your tools and create workflows with the graphical user interface. 
 ![rabix_interface][rabix_interface]
 
 Please follow the full SBG tutorials for rabix on the platform, the interface will be the same. 
@@ -195,7 +195,7 @@ And please paste your tool/workflow description JSON file into the input window 
 
 ![rabix_import_window][rabix_import_window]
 
-Now please click the "+Create" button, it will ask you to save the tools to the speicific repos, you can create one as well. 
+Now please click the "+Create" button, it will ask you to save the tools to the specific repos, you can create one as well. 
 
 ![rabix_create][rabix_create]
 
@@ -211,9 +211,9 @@ Let's just specify the r-base image
 #### Example 2: create samtools tools
 
 ## docopt: Command-line Interface Description Language
-Withd docopt, you can define the interface for you command line applications and different implementation will provide parser for it. Please visit [docopt](http://docopt.org/) website to read through the requirements before you started writing your own docopt 
+With docopt, you can define the interface for you command line applications and different implementation will provide parser for it. Please visit [docopt](http://docopt.org/) website to read through the requirements before you started writing your own docopt 
 
-Actually the style will look very familar to those who has been working with commad line tools a lot in linux. Here is an example from its website
+Actually the style will look very familiar to those who has been working with command line tools a lot in Linux. Here is an example from its website
 
 ```
 Usage:
@@ -232,7 +232,7 @@ Options:
   --drifting    Drifting mine.
 ```
 
-Please do read the website for details, but in short, let's summarise here, you have
+Please do read the website for details, but in short, let's summarize here, you have
 
 * Options (-h, --help, --speed=<kn>, etc.)
 * Positional arguments (<name>, <x>, <y>).
@@ -262,7 +262,7 @@ lower and upper limits of the distribution. Must be finite.
 
 I will add one more parameter to set seed, here is the R script file called `runif.R`. 
 
-At the beginning, I use docopt starndard to write my tool help. 
+At the beginning, I use docopt standard to write my tool help. 
 ```{r}
 'usage: runif.R [--n=<int> --min=<float> --max=<float> --seed=<float>]
 
@@ -312,7 +312,7 @@ runif(n = as.integer(opts$n),
       max = as.numeric(opts$max))
 ```
 
-Ok seems good, now let's test it in our terminal, don't forget to make it executable by doing something like `chmod 755 runif.R`
+OK seems good, now let's test it in our terminal, don't forget to make it executable by doing something like `chmod 755 runif.R`
 
 ```
 $ ./runif.R --help
@@ -356,14 +356,14 @@ system(runif.file)
 
 ## Create Tools in R with rabix
 
-You can use R interface to create objects in R and easily convert it into JSON/YAML for rabix interface or other implemenation. Most importantly, it's possible for creating other applications around those objects in R. 
+You can use R interface to create objects in R and easily convert it into JSON/YAML for rabix interface or other implementation. Most importantly, it's possible for creating other applications around those objects in R. 
 
 ### RabixTool Object
-This object extends the `CommandLineTool` object, with its own adaptors, for example, with additional information like owner, contributor or requirements for cpu and memory. This object describes a command line tool with input, output, arguments and other information for an executor to understand and execute. `rabix` packages also provides validation,  a set of short function constructor names for easy construction of the object. 
+This object extends the `CommandLineTool` object, with its own adapters, for example, with additional information like owner, contributor or requirements for cpu and memory. This object describes a command line tool with input, output, arguments and other information for an executor to understand and execute. `rabix` packages also provides validation,  a set of short function constructor names for easy construction of the object. 
 
 Let's use the same example above for creating a command line tool for `samtools sort`
 
-Load the pacakge first
+Load the package first
 ```{r}
 library(rabix)
 ```
