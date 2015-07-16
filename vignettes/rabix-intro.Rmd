@@ -38,6 +38,19 @@ code2 <- function(...) {
 ```
 
 # Introduction
+How hard it is to create a data analysis workflow, deploy it and distribute it? sometimes it's quite hard. For example, here is standford huge seq pipeline. Each node represents a tool with it's own dependencies, written in different languanges. And a working analysis flow could as comlicated as shown. 
+
+![huge-seq][huge-seq]
+
+We are facing problems
+
+* Dependency hell
+* Workflow standard unbuilt
+* Imporssible to reproduce a flow
+* Hard to develop, deploy and share
+* Hard to benchmark and re-build 
+* Hard to maintain
+
 [rabix](https://www.rabix.org/) is an open-source toolkit for developing and running portable workflows based on the Common Workflow Language specification and Docker, rabix is developed and maintained by [Seven Bridges Genomics](https://www.sbgenomics.com/) engineers. 
 
 [Common workflow languange](https://github.com/common-workflow-language/common-workflow-language) is a community wise effor to create specifications that enable reproducible, portable data analysis flow. There is an Bioconductor package called `cwl` developed to provide implementation of objects and it is based on [draf2](http://common-workflow-language.github.io/draft-2/), full details are described in the website. 
@@ -50,30 +63,116 @@ code2 <- function(...) {
 * Parse roxygen style into a command line [TODO] 
 * Parse docopt into a JSON file
 
-In this tutorial, we will learn about command line tool, R command line tool via docopt standard, creating your own command line tool and use it on rabix or SBG platform. 
+In this tutorial, we will learn about command line tools, how to write R command line tool via docopt, creating your own command line tool and use it on rabix or SBG platform. 
+
+
 
 # Understand Docker
 
-To save the thousands word here about 
+Docker use lightweight containers to build, ship and run application, 
+
+> Package an application with all of its dependencies into a standardized unit for software development.
+
+
+To save thousands word here about 
 * how to create docker image/container
 * how to pull your tools in the docker container
 
 This tutorial assuems that you are familiar with the docker or at least knows which docker container has the tools you want to wrap. 
 
 Materials you should read about 
+
 * [Docker tutorials](https://docs.docker.com/userguide/dockerimages/)
 * [Rocker project](https://github.com/rocker-org/rocker)
 * [Bioconductor docker images](http://www.bioconductor.org/help/docker/)
 
-__Rule of Thumb__: search existing tools before you create your own, use official images as much as possible. For example, you can search "samtools" on [dockerhub](https://dockerhub.com), there will be a list of containers. 
+__Rule of Thumb__: search existing tools before you create your own, use official images(Rocker or Bioc) as much as possible. For example, you can search "samtools" on [dockerhub](https://dockerhub.com), there will be a list of containers. 
 
 # Understand Command Line Tools
 
+In this chapter we will work through some real examples to write R command line tools, learn to use docopt starndard, describe your tools with rabix and creating tools with R interface etc. 
+
+
+
 ## What is Command Line Tool
+
+Most of us are already familiar with command line tools, tons of unix tools and bioinformaits tools have command line interface, we give the command line tool parameters to launch the appplication and do some work for us. 
+
+You tools may also have multiple subcommands, for examples, `samtools` 
+
+```
+$ samtools
+
+Program: samtools (Tools for alignments in the SAM format)
+Version: 1.2 (using htslib 1.2.1)
+
+Usage:   samtools <command> [options]
+
+Commands:
+  -- indexing
+         faidx       index/extract FASTA
+         index       index alignment
+  -- editing
+         calmd       recalculate MD/NM tags and '=' bases
+         fixmate     fix mate information
+         reheader    replace BAM header
+         rmdup       remove PCR duplicates
+         targetcut   cut fosmid regions (for fosmid pool only)
+  -- file operations
+         bamshuf     shuffle and group alignments by name
+         cat         concatenate BAMs
+         merge       merge sorted alignments
+         mpileup     multi-way pileup
+         sort        sort alignment file
+         split       splits a file by read group
+         bam2fq      converts a BAM to a FASTQ
+  -- stats
+         bedcov      read depth per BED region
+         depth       compute the depth
+         flagstat    simple stats
+         idxstats    BAM index stats
+         phase       phase heterozygotes
+         stats       generate stats (former bamcheck)
+  -- viewing
+         flags       explain BAM flags
+         tview       text alignment viewer
+         view        SAM<->BAM<->CRAM conversion
+```
+
+so `sort` or `view` are sub commands, to conform to rabix standard, let me quote some key here
+
+* Note that if your tool has multiple subcommands, you will need to create a description in the graphical editor for each subcommand, saving each one as a new 'tool'. Each subcommand description should reference __the same Docker image__, which contains the tool. So your `view` or `sort` tool should reference the same `samtools` docker image. 
+* All input files and parameter settings are treated as inputs.
+* _Arguments_ that are not related to any specific input—such as those based on resources allocated to the job—can be entered in the _Arguments_ field.
+* The executable name of the subcommand, and any other part of the command that is preset for every execution of the tool as you describe it, is entered in the field _Base Command_. So `samtools sort` will be your base command. 
+
+Each command comes with its own parameteres, for example, let's take a look for `samtools sort`
+
+```
+Usage: samtools sort [options...] [in.bam]
+Options:
+  -l INT     Set compression level, from 0 (uncompressed) to 9 (best)
+  -m INT     Set maximum memory per thread; suffix K/M/G recognized [768M]
+  -n         Sort by read name
+  -o FILE    Write final output to FILE rather than standard output
+  -O FORMAT  Write output as FORMAT ('sam'/'bam'/'cram')   (either -O or
+  -T PREFIX  Write temporary files to PREFIX.nnnn.bam       -T is required)
+  -@ INT     Set number of sorting and compression threads [1]
+
+Legacy usage: samtools sort [options...] <in.bam> <out.prefix>
+Options:
+  -f         Use <out.prefix> as full final filename rather than prefix
+  -o         Write final output to stdout rather than <out.prefix>.bam
+  -l,m,n,@   Similar to corresponding options above
+```
+We see the options, those are the __inputs__ (some or all of them) we want to describe with the command line, and expose to users. 
 
 ## rabix: Portable Bioinformatics Pipelines
 
 ### Introduction
+![rabix_homepage][rabix_homepage]
+Please visit the website [https://www.rabix.org](https://www.rabix.org) for detailed information. This is a very nice implementation of Command Workflow Language, and has so far the best user experience for building your tools and flows. SBG platform also use the same interface. 
+
 Let's quote the features quickly from the website, I think it is summarised very well. 
 
 * __Wrap__: Rabix lets you wrap your data analysis tools so that they can be run on any infrastructure, across diverse environments. Tools are installed inside Docker containers, and their behavior is precisely specified using our graphical editor or, if you prefer, via a JSON document that you can import. Tools wrapped in this way can be directly deployed on any platform: on your laptop, for low data volumes or during testing, with seamless integration to the cloud when demand for computational resources spikes.
@@ -81,17 +180,35 @@ Let's quote the features quickly from the website, I think it is summarised very
 * __Share__: Workflows described using the Common Workflow Language are portable. This allows you to distribute workflows to colleagues without any reconfiguration, and submit your workflows to journals and conferences with the guarantee that your results are perfectly reproducible. Even if you don’t have plans to share your tools, Rabix’s precise specification can help you keep track of which inputs, parameter settings, and tool versions were used in every workflow you execute, making it easy to reproduce analyses any given results.
 * __Run__: Anybody who has the CWL-description of your workflow can execute it, with your precise configurations. Simply pass the JSON document describing your tool to Rabix, along with the data to be analyzed and hit run.
 
-Please login with your github account, then it's ready to start describing tools and pipelines.
+Please login with your github account, then it's ready to start describing tools and pipelines. For more detailed tutorial, a good read will be on SBG developer hub. [TODO]
 
 ### Interface
-You don't need to know about JSON, YAML or any languange, you can simply start describing your tools and create workflows with the graphical user interface. 
+You don't need to know about JSON, YAML or any languange, the most easy way is that you can simply start describing your tools and create workflows with the graphical user interface. 
+![rabix_interface][rabix_interface]
 
-Please follow the SBG tutorials for rabix on the platform, the interface will be the same. 
+Please follow the full SBG tutorials for rabix on the platform, the interface will be the same. 
+
+If you create your tool description files somewhere else, for example, use our R interface, you can simply import the JSON file 
+![rabix_import][rabix_import]
+
+And please paste your tool/workflow description JSON file into the input window and click "import" button, then all fields specified will be pasted to the interface automatically, click save
+
+![rabix_import_window][rabix_import_window]
+
+Now please click the "+Create" button, it will ask you to save the tools to the speicific repos, you can create one as well. 
+
+![rabix_create][rabix_create]
+
+Then you will be able to find your tools in your repos, try click "+New" button on the top right, and click "+New workflow", this will lead you to the workflow editor interface, with SBG's own drag-n-drop interface. 
+
+![rabix_workflow][rabix_workflow]
 
 ### Example
 
+#### Example 1: create some simple R command line
 Let's just specify the r-base image 
 
+#### Example 2: create samtools tools
 
 ## docopt: Command-line Interface Description Language
 Withd docopt, you can define the interface for you command line applications and different implementation will provide parser for it. Please visit [docopt](http://docopt.org/) website to read through the requirements before you started writing your own docopt 
@@ -296,6 +413,7 @@ Now create the tool for `samtools sort`
 rbx <- RabixTool(id = "samtools-sort",
                 label = "Samtools sort subcommand",
                 description = "Samtools sort: sort bam into sorted bam : )",
+                dockerPull = "tengfei/samtools:v1.2",
                 cpu = 2, mem = 202,
                 baseCommand = "samtools sort",
                 arguments = "out.bam",
@@ -314,10 +432,19 @@ rbx$toJSON(pretty = TRUE)
 ```
 ### Practise 
 
+# Acknoledgement
+To the awesome Seven Bridges Genomics team for building and supporting open-source community. 
+
 # Session Inforamtion
 ```{r}
 sessionInfo()
 ```
 
-
+[rabix_homepage]:fig/rabix_homepage.png
+[rabix_interface]:fig/rabix_interface.png
+[rabix_import]:fig/rabix_import.png
+[rabix_import_window]:fig/rabix_import_window.png
+[rabix_create]:fig/rabix_create.png
+[rabix_workflow]:fig/rabix_workflow.png
+[huge-seq]:fig/huge-seq.png
 

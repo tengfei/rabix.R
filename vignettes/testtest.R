@@ -29,7 +29,8 @@ opl <- OPList(OutPar(
 ## Create RabixTool
 rbx <- RabixTool(id = "samtools-sort",
                 label = "Samtools sort subcommand",
-                description = "Samtools sort: sort bam into sorted bam : )",
+                 description = "Samtools sort: sort bam into sorted bam : )",
+                 dockerPull = "tengfei/samtools:v1.2",
                 cpu = 2, mem = 202,
                 baseCommand = "samtools sort",
                 arguments = "out.bam",
