@@ -144,6 +144,8 @@ RabixTool <-
                     contributor = "list"),
                 methods = list(
                     initialize = function(...,
+                        inputs = NULL,
+                        outputs = NULL,
                         cpu = 1L, mem = 1000L,                        
                         dockerImageId = "",
                         dockerPull = "",
@@ -154,6 +156,8 @@ RabixTool <-
                         context = "https://github.com/common-workflow-language/common-workflow-language/blob/draft-1/specification/tool-description.md",
                         owner = list(),
                         contributor = list()){
+
+                        
 
                         stopifnot(is.numeric(cpu))
                         .v <- as.integer(cpu)
@@ -181,6 +185,36 @@ RabixTool <-
                         context <<- context
                         owner <<- owner
                         contributor <<- contributor
+
+                        ## inputs
+                        stopifnot(is(inputs, "InputParameterList") ||
+                                  (is.list(inputs) &&
+                                       all(sapply(inputs, is, "InputParameter"))))
+                        
+                        if(is.list(inputs) &&
+                           all(sapply(inputs, is, "InputParameter"))){
+                            inputs <<- IPList(inputs)
+                        }
+R
+                        if(is(inputs, "InputParameterList")){
+                            inputs <<- inputs
+                        }
+
+                        ## outputs
+                        stopifnot(is(outputs, "OutputParameterList") ||
+                                  (is.list(outputs) &&
+                                       all(sapply(outputs, is, "OutputParameter"))))
+                        
+                        if(is.list(outputs) &&
+                           all(sapply(outputs, is, "OutputParameter"))){
+                            outputs <<- OPList(outputs)
+                        }
+
+                        if(is(outputs, "OutputParameterList")){
+                            
+                        }
+                        
+                        
                         callSuper(...)
                     }
                 ))
