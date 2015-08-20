@@ -100,24 +100,24 @@
 #' }
 #'
 #' @rdname shorthand-cwl
-#' @aliases CLB argslist COB IPList OPList InPar OutPar
+#' @aliases CLB argslist COB IPList OPList input output
 #'
 #'
-#' @export CLB argslist COB IPList OPList InPar OutPar
+#' @export CLB argslist COB IPList OPList input output
 #' @examples
 #' ipl <- IPList(
-#'     InPar(id = "bam",
+#'     input(id = "bam",
 #'           type = "File",
 #'           label = "Bam file",
 #'           description = "Input bam file",
 #'           position = 1L,
 #'           separate = TRUE),
-#'     InPar(id = "level",
+#'     input(id = "level",
 #'           type = "Integer",
 #'           label = "Compression Level",
 #'           description = "Set compression level, from 0 (uncompressed) to 9 (best)",
 #'           position = 2L),
-#'     InPar(id = "prefix",
+#'     input(id = "prefix",
 #'           type = "String",
 #'           label = "Prefix",
 #'           description = "Write temporary files to PREFIX.nnnn.bam",
@@ -128,7 +128,7 @@ argslist <- CCBList
 COB <- CommandOutputBinding
 IPList <- InputParameterList
 OPList <- OutputParameterList
-InPar <- function(id = "", type = "", label = "",
+input <- function(id = "", type = "", label = "",
                   description = "", streamable = FALSE,
                   default = "", ...){
     InputParameter(id = id, type = type, label = label,
@@ -139,7 +139,8 @@ InPar <- function(id = "", type = "", label = "",
     )
 }
 
-OutPar <- function(type = "", label = "", description = "",
+
+output <- function(type = "", label = "", description = "",
                    streamable = FALSE, default = "",
                    id = "",  ...){
     CommandOutputParameter(id = id, type = type, label = label,

@@ -6,10 +6,10 @@
 \alias{COB}
 \alias{CommandLineBinding-class}
 \alias{IPList}
-\alias{InPar}
 \alias{OPList}
-\alias{OutPar}
 \alias{argslist}
+\alias{input}
+\alias{output}
 \title{Shorthand functions for cwl packages constructors}
 \arguments{
 \item{type}{[ANY] Specify valid types of data that may be assigned
@@ -119,18 +119,18 @@ remainder of the string to the end of the file path.}
 }
 \examples{
 ipl <- IPList(
-    InPar(id = "bam",
+    input(id = "bam",
           type = "File",
           label = "Bam file",
           description = "Input bam file",
           position = 1L,
           separate = TRUE),
-    InPar(id = "level",
+    input(id = "level",
           type = "Integer",
           label = "Compression Level",
           description = "Set compression level, from 0 (uncompressed) to 9 (best)",
           position = 2L),
-    InPar(id = "prefix",
+    input(id = "prefix",
           type = "String",
           label = "Prefix",
           description = "Write temporary files to PREFIX.nnnn.bam",
