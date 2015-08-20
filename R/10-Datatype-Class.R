@@ -19,7 +19,7 @@
 
 #' Pre-defiend enums
 #'
-#' Please check \code{cwl:::.CWL.Pritimive}, \code{cwl:::.CWL.Complex}. 
+#' Please check \code{rabix:::.CWL.Pritimive}, \code{rabix:::.CWL.Complex}. 
 #'
 #' @importFrom objectProperties setSingleEnum
 #' 

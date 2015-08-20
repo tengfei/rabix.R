@@ -20,7 +20,7 @@
 #' @param default [ANY] The default value for this parameter if not
 #' provided in the input object.
 #'
-#' @param \dots For \code{Inpar} or \code{InputParameter}, it will be
+#' @param \dots For \code{InputParameter}, it will be
 #' passed to [CommandLineBinding], which could be created by command
 #' \code{CLB}. For parameters that accepted please check
 #' \code{CommandLineBiding} in cwl package. For your convenience, this
@@ -35,6 +35,8 @@
 #' COB <- CommandOutputBinding
 #' IPList <- InputParameterList
 #' OPList <- OutputParameterList
+#' InPar <- InputParameter
+#' OutPar <- OutputParameter
 #'
 #' @section CommandLineBinding:
 #' \describe{
@@ -100,10 +102,11 @@
 #' }
 #'
 #' @rdname shorthand-cwl
-#' @aliases CLB argslist COB IPList OPList input output
+#' @name CLB
+#' @aliases CLB argslist COB IPList OPList input output InPar OutPar
 #'
 #'
-#' @export CLB argslist COB IPList OPList input output
+#' @export CLB argslist COB IPList OPList input output InPar OutPar
 #' @examples
 #' ipl <- IPList(
 #'     input(id = "bam",
@@ -128,6 +131,8 @@ argslist <- CCBList
 COB <- CommandOutputBinding
 IPList <- InputParameterList
 OPList <- OutputParameterList
+InPar <- InputParameter
+OutPar <- OutputParameter
 input <- function(id = "", type = "", label = "",
                   description = "", streamable = FALSE,
                   default = "", ...){

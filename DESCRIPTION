@@ -1,7 +1,7 @@
 Package: rabix
 Type: Package
 Title: R utilities for rabix.
-Version: 0.0.7
+Version: 0.1.0
 Date: 2015-06-01
 Author: Tengfei Yin <tengfei.yin@sbgenomics.com>, Nan Xiao <nan.xiao@sbgenomics.com>
 Maintainer: Tengfei Yin <tengfei.yin@sbgenomics.com>

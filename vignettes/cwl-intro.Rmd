@@ -13,7 +13,7 @@ output:
 
 <!--
 %\VignetteIndexEntry{Common Workflow Language R}
-%\VignettePackage{cwl}
+%\VignettePackage{rabix}
 %\VignetteEngine{knitr::rmarkdown}
 -->
 
@@ -52,7 +52,7 @@ The top class is *CWL* class, it comes with soeme utility function that convert 
 To construct the object, you can simply check out the class name (same as the generator name) in the terminal or check its manual to see what fields it need.
 
 ```{r}
-library(cwl)
+library(rabix)
 InputParameter
 ```
 Then construct it with the constructor directly

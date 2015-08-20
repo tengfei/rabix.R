@@ -13,7 +13,7 @@ output:
 
 <!--
 %\VignetteIndexEntry{Introduction: rabix with R}
-%\VignettePackage{cwl}
+%\VignettePackage{rabix}
 %\VignetteEngine{knitr::rmarkdown}
 -->
 
@@ -340,7 +340,7 @@ Loading required package: methods
 SBG engineer team provide a python parser for docopt, it can parse a command line tool from its help manual if it conforms to docopt standard. It will become part of the rabix tool, but before that, I also include the python parser in this R package. 
 
 Let's use above example, the script is in the package folder.
-```{r}
+```{r, eval = FALSE}
 runif.file <- system.file("cwl", "runif.R", package = "rabix")
 system(runif.file)
 ```
@@ -354,7 +354,6 @@ system(runif.file)
 
 ### Describe your runif tools
 ```{r}
-library(rabix)
 
 ```
 
@@ -371,8 +370,6 @@ Let's use the same example above for creating a command line tool for `samtools 
 
 Load the package first
 ```{r}
-
-library(rabix)
 rbx <- RabixTool(id = "runif",
                 label = "Random number generator",
                 description = "Random number generator",
@@ -411,62 +408,6 @@ rbx <- RabixTool(id = "runif",
                                       glob = "*.txt")))
 rbx$toJSON()
 ```
-
-Define input parameters
-* `IPList` is short for `InputParameterList` from `cwl` package
-* `InPar` is short for `InputParameter` from `cwl` package
-* `OutPar` is short for `OutputParameter` from `cwl` package
-
-
-```{r}
-ipl <- IPList(
-    InPar(id = "bam",
-          type = "File",
-          label = "Bam file",
-          description = "Input bam file",
-          position = 1L),
-    InPar(id = "level",
-          type = "Integer",
-          label = "Compression Level",
-          description = "Set compression level, from 0 (uncompressed) to 9 (best)",
-          position = 2L),
-    InPar(id = "prefix",
-          type = "String",
-          label = "Prefix",
-          description = "Write temporary files to PREFIX.nnnn.bam",
-          position = 3L)
-)
-
-```
-Create output parameter
-
-```{r}
-opl <- OPList(OutPar(
-        id = "sorted",
-        type = "File",
-        glob = "*.bam"    
-))
-```
-
-Now create the tool for `samtools sort`
-
-```{r}
-rbx <- RabixTool(id = "samtools-sort",
-                label = "Samtools sort subcommand",
-                description = "Samtools sort: sort bam into sorted bam : )",
-                dockerPull = "tengfei/samtools:v1.2",
-                cpu = 2, mem = 202,
-                baseCommand = "samtools sort",
-                arguments = "out.bam",
-                inputs = ipl,
-                outputs = opl)
-```
-
-You can then dump it into JSON and paste it into JSON interface
-```{r}
-rbx$toJSON()
-```
-
 Or print it nicely to check it
 ```{r}
 rbx$toJSON(pretty = TRUE)

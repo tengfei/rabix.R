@@ -28,7 +28,7 @@ with more fields.
 \section{other fields}{
 
 \describe{
-\item{\code{cpu}}{cpu 0 or 1, for any value >1 will be converted to 1L, passed to CpuRequirement}
+\item{\code{cpu}}{cpu 0 or 1, for any value >1 will be converted to 1L, passed to CPURequirement}
 \item{\code{mem}}{Positive integer. Passed to MemRequirement.}
 \item{\code{dockerPull}}{[character] Get a Docker image using
 docker pull}
@@ -47,41 +47,5 @@ in which case the dockerPull image id will be used.}
 \item{\code{dockerOutputDirectory}}{ [character] Set the designated
 output directory to a specific location inside the Docker
 container.}}
-}
-\examples{
-ipl <- IPList(
-    InPar(id = "bam",
-          type = "File",
-          label = "Bam file",
-          description = "Input bam file",
-          position = 1L,
-          separate = TRUE),
-    InPar(id = "level",
-          type = "Integer",
-          label = "Compression Level",
-          description = "Set compression level, from 0 (uncompressed) to 9 (best)",
-          position = 2L),
-    InPar(id = "prefix",
-          type = "String",
-          label = "Prefix",
-          description = "Write temporary files to PREFIX.nnnn.bam",
-          position = 3L)
-)
-opl <- OPList(OutPar(
-        id = "sorted",
-        type = "File",
-        glob = "*.bam"
-))
-rbx <- RabixTool(id = "samtools-sort",
-                label = "Samtools sort subcommand",
-                description = "Samtools sort: sort bam into sorted bam : )",
-                dockerPull = "tengfei/samtools:v1.2",
-                cpu = 2, mem = 202,
-                baseCommand = "samtools sort",
-                arguments = "out.bam",
-                inputs = ipl,
-                 outputs = opl)
-rbx$toJSON()
-rbx$toJSON(pretty = TRUE)
 }
 
