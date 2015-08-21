@@ -122,13 +122,14 @@ Parameter <- setRefClass("Parameter", contains = "CWL",
                                  streamable = FALSE){
                                  if(is(type, "DSCList")){
                                      type <<- type
-                                 }else{
-                                     if(is.character(type)){
-                                         .type <- deType(type)
-                                     }else{
-                                         .type <- type
-                                     }
-                                     type <<- DSCList(.type)
+                                }else{
+                                     ## do deType by rabix
+                                     ## if(is.character(type)){
+                                     ##     .type <- deType(type)
+                                     ## }else{
+                                     ##     .type <- type
+                                     ## }
+                                     type <<- DSCList(type)
                                  }
                                  streamable <<- streamable
                                  callSuper(...)

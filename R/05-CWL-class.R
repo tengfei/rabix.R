@@ -64,16 +64,26 @@ CWL <- setRefClass("CWL",
 
                            return(res)
                        },
-                       toYAML = function(...){
+                       toYAML = function(destfile = NULL, ...){
                            'Covert object to YAML'
                            l <- .self$toList()
-                           yaml::as.yaml(l, ...)
+                           res <- yaml::as.yaml(l, ...)
+                           if(!is.null(destfile)){
+                               writeLines(res, destfile)
+                           }else{
+                               res
+                           }
 
                        },
-                       toJSON = function(...){
-                           'Covert object to JSON'
+                       toJSON = function(destfile = NULL, ...){
+                           'Covert object to JSON, the first argument is file output path'
                            l <- .self$toList()
-                           jsonlite::toJSON(l, ...)
+                           res <- jsonlite::toJSON(l, ...)
+                           if(!is.null(destfile)){
+                               writeLines(res, destfile)
+                           }else{
+                               res
+                           }
                        },
                        show = function(format = c("YAML", "JSON"), ...){
                            'pretty print YAML (default) or JSON format of an object'

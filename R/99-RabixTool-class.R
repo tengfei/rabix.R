@@ -40,6 +40,7 @@ CPURequirement <-
 
 
 
+
 #' @rdname requirements
 #' @aliases MemRequirement MemRequirement-class
 #' @export MemRequirement

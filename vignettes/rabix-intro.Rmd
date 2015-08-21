@@ -371,46 +371,52 @@ Let's use the same example above for creating a command line tool for `samtools 
 Load the package first
 ```{r}
 rbx <- RabixTool(id = "runif",
-                label = "Random number generator",
-                description = "Random number generator",
-                dockerPull = "tengfei/runif",
-                cpu = 1, mem = 1024,
-                baseCommand = "runif.R",
-                stdout = "out.txt",
-                inputs = list(input(id = "number",
-                                    description = "number of observations",
-                                    type = "integer",
-                                    label = "number",
-                                    prefix = "--n",
-                                    default = 1),
-                              input(id = "min",
-                                    description = "lower limits of the distribution",
-                                    type = "float",
-                                    label = "min",
-                                    prefix = "--min",
-                                    default = 0),
-                              input(id = "max",
-                                    description = "upper limits of the distribution",
-                                    type = "float",
-                                    label = "max",
-                                    prefix = "--max",
-                                    default = 1),
-                              input(id = "seed",
-                                    description = "seed with set.seed",
-                                    type = "float",
-                                    label = "seed",
-                                    prefix = "--seed",
-                                    default = 1)),
-                outputs = list(output(id = "random_file",
-                                      type = "file",
-                                      label = "output", 
-                                      description = "random number file",
-                                      glob = "*.txt")))
+                 label = "Random number generator",
+                 description = "Random number generator",
+                 dockerPull = "tengfei/runif",
+                 cpu = 1, mem = 1024,
+                 baseCommand = "runif.R",
+                 inputs = list(input(id = "number",
+                     description = "number of observations",
+                     type = "integer",
+                     label = "number",
+                     prefix = "--n",
+                     default = 1,
+                     required = TRUE),
+                     input(id = "min",
+                           description = "lower limits of the distribution",
+                           type = "float",
+                           label = "min",
+                           prefix = "--min",
+                           default = 0),
+                     input(id = "max",
+                           description = "upper limits of the distribution",
+                           type = "float",
+                           label = "max",
+                           prefix = "--max",
+                           default = 1),
+                     input(id = "seed",
+                           description = "seed with set.seed",
+                           type = "float",
+                           label = "seed",
+                           prefix = "--seed",
+                           default = 1)),
+                 outputs = list(output(id = "random_file",
+                     type = "file",
+                     label = "output", 
+                     description = "random number file",
+                     glob = "*.txt")))
 rbx$toJSON()
 ```
+
 Or print it nicely to check it
 ```{r}
 rbx$toJSON(pretty = TRUE)
+```
+
+To write
+```{r, eval = FALSE}
+rbx$toJSON("~/temp.json")
 ```
 ### Practise 
 

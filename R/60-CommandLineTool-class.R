@@ -88,7 +88,9 @@ setClassUnion("characterORCommandLineBinding",
 #' 
 #' @examples
 #' CCBList("-o output.bam")
+#' CCBList("-o output.bam", "-thread  1", CLB(valueFrom = "-t", position = 3L))
 CCBList <- setListClass("characterORCommandLineBinding")
+
 
 #' CommandLineTool Class
 #'
@@ -288,12 +290,17 @@ CommandLineTool <- setRefClass("CommandLineTool",
                                        arguments = "",
                                        ...){
                                        if(is.character(arguments)){
-                                           arguments <<- CCBList(
-                                               CommandLineBinding(
-                                                   valueFrom = arguments
-                                               ))
+                                           if(nchar(arguments) > 0){
+                                               arguments <<- CCBList(
+                                                   CommandLineBinding(
+                                                       valueFrom = arguments
+                                                   ))
+                                           }else{
+                                               arguments <<- CCBList()
+                                           }
+
                                        }
-                                       if(is(arguments, "CommandLineBiding")){
+                                       if(is(arguments, "CommandLineBinding")){
                                            arguments <<- CCBList(arguments)
                                        }
                                        if(is(arguments,

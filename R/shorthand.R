@@ -135,7 +135,14 @@ InPar <- InputParameter
 OutPar <- OutputParameter
 input <- function(id = "", type = "", label = "",
                   description = "", streamable = FALSE,
-                  default = "", ...){
+                  default = "", required = FALSE, ...){
+    
+    type <- deType(type)
+    
+    if(!required && length(type) == 1){
+        type = c("null", type)
+    }
+
     InputParameter(id = id, type = type, label = label,
                    description = description,
                    streamable = streamable,
@@ -148,6 +155,7 @@ input <- function(id = "", type = "", label = "",
 output <- function(type = "", label = "", description = "",
                    streamable = FALSE, default = "",
                    id = "",  ...){
+    type <- deType(type)
     CommandOutputParameter(id = id, type = type, label = label,
                            description = description,
                            streamable = streamable,
